@@ -30,6 +30,43 @@ class _WeatherState extends State<WeatherPage> {
     }
   }
 
+  // weather animations
+  String getWeatherAnimation(
+      String? condition, String? description, bool? isDay) {
+    if (condition == null || isDay == null || description == null) {
+      return "assets/sunny.json";
+    }
+
+    switch (condition.toLowerCase()) {
+      case 'clouds':
+        if (description == "scattered clouds" || description == "few clouds") {
+          if (isDay) return "assets/fewclouds_day.json";
+          return "assets/fewclouds_night.json";
+        }
+        return "assets/clouds.json";
+      case 'mist':
+      case 'smoke':
+      case 'haze':
+      case 'dust':
+      case 'fog':
+        return "assets/mist.json";
+      case 'rain':
+      case 'drizzle':
+      case 'shower rain':
+        if (isDay) return "assets/rain_day.json";
+        return "assets/rain_night.json";
+      case 'thunderstorm':
+        return "assets/thunder.json";
+      case 'snow':
+        return "assets/snow.json";
+      case 'clear':
+        if (isDay) return "assets/sunny.json";
+        return "assets/moon.json";
+      default:
+        return "assets/sunny.json";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +99,8 @@ class _WeatherState extends State<WeatherPage> {
                   child: const Text('Get Weather'),
                 ),
                 const SizedBox(height: 20),
-                Lottie.asset('assets/sun.json'),
+                Lottie.asset(getWeatherAnimation(_weather?.condition,
+                    _weather?.description, _weather?.isDay)),
                 Text(' ${_weather?.temperature.round().toString()}°',
                     style: const TextStyle(
                       fontSize: 100,

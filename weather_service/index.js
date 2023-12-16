@@ -25,11 +25,15 @@ app.get('/weather', async (req, res) => {
     const response = await axios.get(apiUrl);
     const weatherData = response.data;
 
+    const isDay = (weatherData.dt > weatherData.sys.sunrise && weatherData.dt < weatherData.sys.sunset) 
+
     // Extract key weather details
     const simplifiedResponse = {
       temperature: weatherData.main.temp,
       tempMin: weatherData.main.temp_min,
       tempMax: weatherData.main.temp_max,
+      isDay: isDay,
+      condition: weatherData.weather[0].main,
       description: weatherData.weather[0].description,
       iconCode: weatherData.weather[0].icon,
     };

@@ -14,18 +14,17 @@ app.get('/weather', async (req, res) => {
   const { city } = req.query;
 
   if (!city) {
-    return res.status(400).json({ error: 'City name is required' });
+    return res.status(400).json('city name is required');
   }
 
   try {
     // Api config
-    const apiKey = 'API Key';
-    const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    const appId = '3fbf6c241c21e15eaf7575940faf02e3';
+    const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${appId}&units=metric`;
 
     const response = await axios.get(apiUrl);
     const weatherData = response.data;
-
-    const isDay = (weatherData.dt > weatherData.sys.sunrise && weatherData.dt < weatherData.sys.sunset) 
+    const isDay = (weatherData.dt > weatherData.sys.sunrise && weatherData.dt < weatherData.sys.sunset); 
 
     // Extract key weather details
     const simplifiedResponse = {
@@ -41,7 +40,7 @@ app.get('/weather', async (req, res) => {
     res.status(200).json(simplifiedResponse);
   } catch (error) {
     console.error('Error fetching weather data:', error.message);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(Number(error.response.data.cod)).json(error.response.data.message);
   }
 });
 

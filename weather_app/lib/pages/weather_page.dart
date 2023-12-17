@@ -16,17 +16,26 @@ class _WeatherState extends State<WeatherPage> {
   final TextEditingController _cityController = TextEditingController();
   Weather? _weather;
   bool loading = false;
+  String error = '';
 
   // fetch weather
   _fetchWeather() async {
+    setState(() {
+      error = '';
+      loading = true;
+    });
     try {
       final weather =
           await _weatherService.getWeatherData(_cityController.text);
       setState(() {
         _weather = weather;
+        loading = false;
       });
     } catch (e) {
-      return;
+      setState(() {
+        error = '{$e}';
+        loading = false;
+      });
     }
   }
 
@@ -94,26 +103,34 @@ class _WeatherState extends State<WeatherPage> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
+                    FocusScope.of(context).unfocus();
                     _fetchWeather();
                   },
                   child: const Text('Get Weather'),
                 ),
+                Text(error),
+                if (loading) const CircularProgressIndicator(),
                 const SizedBox(height: 20),
                 Lottie.asset(getWeatherAnimation(_weather?.condition,
                     _weather?.description, _weather?.isDay)),
-                Text(' ${_weather?.temperature.round().toString()}°',
+                Text(
+                    (_weather != null)
+                        ? ' ${_weather?.temperature.round().toString()}°'
+                        : '--',
                     style: const TextStyle(
                       fontSize: 100,
                       fontWeight: FontWeight.w300,
                     )),
                 Text(
-                  (_weather != null) ? _weather!.description.capitalize() : '-',
+                  (_weather != null) ? _weather!.description.capitalize() : '',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text('H: ${_weather?.tempMax.round().toString()}°'),
+                      Text((_weather != null)
+                          ? 'H: ${_weather!.tempMax.round().toString()}°'
+                          : ''),
                       const Padding(
                         padding: EdgeInsets.only(left: 15, right: 15),
                         child: Center(
@@ -122,7 +139,9 @@ class _WeatherState extends State<WeatherPage> {
                           height: 30,
                         )),
                       ),
-                      Text('L: ${_weather?.tempMin.round().toString()}°'),
+                      Text((_weather != null)
+                          ? 'L: ${_weather!.tempMin.round().toString()}°'
+                          : ''),
                     ]),
               ],
             ),

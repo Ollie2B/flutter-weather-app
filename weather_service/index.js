@@ -34,8 +34,8 @@ app.get('/weather', async (req, res) => {
       isDay: isDay,
       condition: weatherData.weather[0].main,
       description: weatherData.weather[0].description,
-      iconCode: weatherData.weather[0].icon,
     };
+    console.log(simplifiedResponse)
 
     res.status(200).json(simplifiedResponse);
   } catch (error) {

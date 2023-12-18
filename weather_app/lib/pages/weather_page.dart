@@ -23,6 +23,7 @@ class _WeatherState extends State<WeatherPage> {
     setState(() {
       error = '';
       loading = true;
+      _weather = null;
     });
     try {
       final weather =
@@ -33,7 +34,7 @@ class _WeatherState extends State<WeatherPage> {
       });
     } catch (e) {
       setState(() {
-        error = '{$e}';
+        error = e.toString().split(': ')[1].capitalize();
         loading = false;
       });
     }
@@ -100,7 +101,15 @@ class _WeatherState extends State<WeatherPage> {
                     hintText: 'Enter city name',
                   ),
                 ),
-                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    error,
+                    style: const TextStyle(
+                      color: Color.fromRGBO(255, 0, 0, 1),
+                    ),
+                  ),
+                ),
                 ElevatedButton(
                   onPressed: () {
                     FocusScope.of(context).unfocus();
@@ -108,8 +117,10 @@ class _WeatherState extends State<WeatherPage> {
                   },
                   child: const Text('Get Weather'),
                 ),
-                Text(error),
-                if (loading) const CircularProgressIndicator(),
+                if (loading)
+                  const Padding(
+                      padding: EdgeInsets.only(top: 20),
+                      child: CircularProgressIndicator()),
                 const SizedBox(height: 20),
                 Lottie.asset(getWeatherAnimation(_weather?.condition,
                     _weather?.description, _weather?.isDay)),

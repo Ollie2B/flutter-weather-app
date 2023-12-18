@@ -9,7 +9,7 @@ Requirements:
 
 Installation:
 - Clone the repository
-$ git clone https://github.com/Ollie2B/flutter-weather-app
+$ git clone https://github.com/Ollie2B/flutter-weather-app.git
 - To run the backend, inside a terminal, locate the project folder and run:
 $ cd .\weather_service\
 $ npm install
@@ -20,4 +20,4 @@ $ flutter pub get
 Link your android device to Flutter VS Code Extension
 Run your Flutter App with VS Code
 
-For more information on setting up the project follow https://docs.flutter.dev/get-started/install.
+For more information on setting up the project follow https://docs.flutter.dev/get-started/install
